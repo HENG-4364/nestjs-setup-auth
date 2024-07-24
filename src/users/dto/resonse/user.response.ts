@@ -1,22 +1,23 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class Users {
+export class User {
   @Field(() => String)
   id: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   firstName: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   lastName: string;
 
-  @Field()
+  @Field(() => String, { nullable: false })
   email: string;
-  @Field()
+
+  @Field(() => String, { nullable: true })
   gender: string;
 
-  @Field()
+  @Field(() => String, { nullable: false })
   password: string;
 
   @Field(() => Date)
@@ -27,11 +28,11 @@ export class Users {
 }
 @ObjectType()
 export class UserResponse {
-  @Field(() => Users)
-  data: Users;
+  @Field(() => User)
+  data: User;
 }
 @ObjectType()
 export class UsersResponse {
-  @Field(() => [Users])
-  data: Users[];
+  @Field(() => [User])
+  data: User[];
 }

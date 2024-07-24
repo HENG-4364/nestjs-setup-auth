@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GraphQLError } from 'graphql';
-import { UsersResponse } from './dto/resonse/user.response';
-import { User } from './entities/users.entity';
+import { User } from '../entities/users.entity';
+import { UsersResponse } from '../dto/resonse/user.response';
 
 @Injectable()
 export class UsersServive {

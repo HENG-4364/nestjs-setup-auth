@@ -2,12 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Users {
+type User {
   id: String!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   email: String!
-  gender: String!
+  gender: String
   password: String!
   created_at: DateTime!
   updated_at: DateTime!
@@ -19,14 +19,37 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type UserResponse {
-  data: Users!
+  data: User!
 }
 
 type UsersResponse {
-  data: [Users!]!
+  data: [User!]!
+}
+
+type LoginResponse {
+  accessToken: String
 }
 
 type Query {
   users: UsersResponse!
   user(id: String!): UserResponse
+  getMe: UserResponse!
+}
+
+type Mutation {
+  create(input: CreateUserInput!): UserResponse!
+  login(input: LoginInput!): LoginResponse!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  gender: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

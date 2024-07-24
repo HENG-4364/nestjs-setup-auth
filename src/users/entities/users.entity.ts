@@ -1,25 +1,20 @@
-import { Field } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
-  @Column()
-  @Field()
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
   lastName: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 10 })
+  @Column({ type: 'varchar', length: 10, nullable: true })
   gender: string;
 
   @Column({ nullable: true })
-  @Field()
   password: string;
 }

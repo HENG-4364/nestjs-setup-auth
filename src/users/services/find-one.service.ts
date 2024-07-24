@@ -30,4 +30,23 @@ export class FindOneServive {
       }
     }
   }
+
+  async findOneByEmail(email: string): Promise<UserResponse> {
+    try {
+      const users = await this.usersRepository.findOne({ where: { email } });
+      return {
+        data: users,
+      };
+    } catch (error) {
+      if (error instanceof GraphQLError) {
+        throw error;
+      } else {
+        throw new GraphQLError('Internal server error', {
+          extensions: {
+            code: 'INTERNAL_SERVER_ERROR',
+          },
+        });
+      }
+    }
+  }
 }

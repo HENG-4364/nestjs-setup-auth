@@ -8,10 +8,12 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 import { join } from 'path';
 import { User } from './users/entities/users.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],
@@ -27,7 +29,7 @@ import { User } from './users/entities/users.entity';
         database: configService.getOrThrow<string>('DATABASE_NAME'),
         entities: [User],
         synchronize: true,
-        logging: true,
+        // logging: true,
         migrationsRun: true,
         migrationsTableName: 'migrations',
         charset: 'utf8mb4',
