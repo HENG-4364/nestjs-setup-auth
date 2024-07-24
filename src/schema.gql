@@ -1,0 +1,32 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Users {
+  id: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  gender: String!
+  password: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UserResponse {
+  data: Users!
+}
+
+type UsersResponse {
+  data: [Users!]!
+}
+
+type Query {
+  users: UsersResponse!
+  user(id: String!): UserResponse
+}
