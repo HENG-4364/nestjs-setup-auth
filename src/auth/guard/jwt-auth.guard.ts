@@ -6,6 +6,8 @@ import { Request } from 'express';
 import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { FindOneServive } from 'src/users/services/find-one.service';
+import { Reflector } from '@nestjs/core';
+import { PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
@@ -13,12 +15,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     private findOneService: FindOneServive,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly reflector: Reflector,
   ) {
     super();
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     let request: Request;
+
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
 
     if (context.getType() === 'http') {
       request = context.switchToHttp().getRequest();

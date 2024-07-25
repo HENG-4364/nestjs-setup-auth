@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/users.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-// import { APP_GUARD } from '@nestjs/core';
-// import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => ({
         global: true,
         secret: configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
-        signOptions: { expiresIn: '7d' },
+        signOptions: { expiresIn: '1d' },
       }),
     }),
   ],
@@ -25,10 +25,10 @@ import { ConfigService } from '@nestjs/config';
     AuthService,
     AuthResolver,
     FindOneServive,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AuthModule {}
