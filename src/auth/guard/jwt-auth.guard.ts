@@ -53,6 +53,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
         secret: this.configService.get('ACCESS_TOKEN_SECRET'),
       })) as { userId: string };
 
+      if (!payload.userId) {
+        throw new GraphQLError(`Invalid token`, {
+          extensions: {
+            code: 'UNAUTHENTICATED',
+          },
+        });
+      }
+
       const foundUser = await this.findOneService.findOne(payload.userId);
 
       if (!foundUser?.data) {

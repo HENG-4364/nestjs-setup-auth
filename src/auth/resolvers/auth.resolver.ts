@@ -21,13 +21,12 @@ export class AuthResolver {
     return await this.authService.login(input);
   }
 
+  @Public()
   @Mutation(() => RefreshTokenResponse)
   async refreshToken(
     @Args('input') input: RefreshTokenInput,
   ): Promise<RefreshTokenResponse> {
-    return {
-      accessToken: await this.authService.refreshToken(input),
-    };
+    return await this.authService.refreshToken(input);
   }
 
   @Query(() => UserResponse)

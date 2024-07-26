@@ -5,6 +5,7 @@ import { FindOneServive } from 'src/users/services/find-one.service';
 import * as bcrypt from 'bcrypt';
 import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { RefreshTokenInput } from './dto/input/refresh-token.input';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -12,20 +13,33 @@ export class AuthService {
   constructor(
     private readonly findOneService: FindOneServive,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async refreshToken(input: RefreshTokenInput) {
     try {
-      const payload = await this.jwtService.verifyAsync(input.refreshToken);
-      const { userId } = payload;
+      const payload = await this.jwtService.verifyAsync(input.refreshToken, {
+        secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
+      });
 
-      const accessToken = await this.jwtService.signAsync(
-        { userId },
-        {
-          expiresIn: '1m',
-        },
-      );
-      return accessToken;
+      const { userId } = payload;
+      const refreshPayload = { userId };
+      const accesPayload = { userId };
+
+      const accessToken = await this.jwtService.signAsync(accesPayload, {
+        expiresIn: this.configService.getOrThrow<string>('ACCESS_TOKEN_EXP'),
+        secret: this.configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
+      });
+
+      const refreshToken = this.jwtService.sign(refreshPayload, {
+        expiresIn: this.configService.getOrThrow<string>('REFRESH_TOKEN_EXP'),
+        secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
+      });
+
+      return {
+        accessToken,
+        refreshToken,
+      };
     } catch (error) {
       this.logger.error(error);
       if (error instanceof GraphQLError) {
@@ -74,10 +88,17 @@ export class AuthService {
       }
       const { data } = foundUser;
 
-      const payload = { userId: data.id };
+      const refreshPayload = { userId: data.id };
+      const accesPayload = { userId: data.id };
+      const accessToken = await this.jwtService.signAsync(accesPayload, {
+        expiresIn: this.configService.getOrThrow<string>('ACCESS_TOKEN_EXP'),
+        secret: this.configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
+      });
 
-      const accessToken = this.jwtService.sign(payload, { expiresIn: '1m' });
-      const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+      const refreshToken = this.jwtService.sign(refreshPayload, {
+        expiresIn: this.configService.getOrThrow<string>('REFRESH_TOKEN_EXP'),
+        secret: this.configService.getOrThrow<string>('REFRESH_TOKEN_SECRET'),
+      });
 
       return {
         accessToken,

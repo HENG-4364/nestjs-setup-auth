@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, PartialType } from '@nestjs/graphql';
 
 @ObjectType()
 export class LoginResponse {
@@ -10,7 +10,4 @@ export class LoginResponse {
 }
 
 @ObjectType()
-export class RefreshTokenResponse {
-  @Field(() => String, { nullable: true })
-  accessToken: string;
-}
+export class RefreshTokenResponse extends PartialType(LoginResponse) {}

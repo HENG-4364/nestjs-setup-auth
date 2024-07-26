@@ -7,6 +7,7 @@ export const getMeByContext = (context: ExecutionContext): UserResponse => {
     return context.switchToHttp().getRequest().user;
   }
   const ctx = GqlExecutionContext.create(context);
+
   return ctx.getContext().req.user;
 };
 

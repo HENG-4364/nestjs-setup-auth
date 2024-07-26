@@ -12,19 +12,15 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        global: true,
-        secret: configService.getOrThrow<string>('ACCESS_TOKEN_SECRET'),
-        signOptions: { expiresIn: '1d' },
-      }),
+    JwtModule.register({
+      global: true,
     }),
   ],
   providers: [
     AuthService,
     AuthResolver,
     FindOneServive,
+    ConfigService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

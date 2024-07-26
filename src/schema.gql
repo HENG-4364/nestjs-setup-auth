@@ -33,6 +33,7 @@ type LoginResponse {
 
 type RefreshTokenResponse {
   accessToken: String
+  refreshToken: String
 }
 
 type Query {
